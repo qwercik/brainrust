@@ -20,8 +20,6 @@ fn decrement_with_overflow(value: &mut u8) {
     }
 }
 
-
-#[derive(Debug)]
 enum Instruction {
     Increment,
     Decrement,
@@ -34,17 +32,17 @@ enum Instruction {
 }
 
 impl Instruction {
-    fn parse(character: char) -> Result<Instruction, &'static str> {
+    fn parse(character: char) -> Option<Instruction> {
         match character {
-            '+' => Ok(Instruction::Increment),
-            '-' => Ok(Instruction::Decrement),
-            '>' => Ok(Instruction::MoveRight),
-            '<' => Ok(Instruction::MoveLeft),
-            '.' => Ok(Instruction::Putchar),
-            ',' => Ok(Instruction::Getchar),
-            '[' => Ok(Instruction::LoopStart),
-            ']' => Ok(Instruction::LoopEnd),
-            _ => Err("Unknown instruction")
+            '+' => Some(Instruction::Increment),
+            '-' => Some(Instruction::Decrement),
+            '>' => Some(Instruction::MoveRight),
+            '<' => Some(Instruction::MoveLeft),
+            '.' => Some(Instruction::Putchar),
+            ',' => Some(Instruction::Getchar),
+            '[' => Some(Instruction::LoopStart),
+            ']' => Some(Instruction::LoopEnd),
+            _ => None
         }
     }
 }
@@ -68,7 +66,7 @@ impl Interpreter {
         let mut instructions = vec![];
 
         for character in code.chars() {
-            if let Ok(instruction) = Instruction::parse(character) {
+            if let Some(instruction) = Instruction::parse(character) {
                 instructions.push(instruction);
             }
         }
@@ -129,6 +127,7 @@ impl Interpreter {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
+
     if args.len() != 2 {
         println!("Incorrect usage!");
         println!("Use: {} file.bf", args[0]);
