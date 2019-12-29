@@ -20,6 +20,17 @@ fn decrement_with_overflow(value: &mut u8) {
     }
 }
 
+fn read_code_from_file(filename: &str) -> String {
+    let mut file = File::open(filename)
+        .expect("Could not open file");
+
+    let mut content = String::new();
+    file.read_to_string(&mut content)
+        .expect("Could not read file");
+
+    content
+}
+
 enum Instruction {
     Increment,
     Decrement,
@@ -132,14 +143,9 @@ fn main() {
         println!("Incorrect usage!");
         println!("Use: {} file.bf", args[0]);
     } else {
-        let mut file = File::open(&args[1])
-            .expect("Could not open file");
-
-        let mut content = String::new();
-        file.read_to_string(&mut content)
-            .expect("Could not read file");
+        let code = read_code_from_file(&args[1]);
 
         let mut interpreter = Interpreter::new();
-        interpreter.execute(&Interpreter::parse(&content));
+        interpreter.execute(&Interpreter::parse(&code));
     }
 }
