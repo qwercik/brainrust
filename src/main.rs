@@ -1,4 +1,5 @@
 use std::env;
+use std::io;
 use std::io::Read;
 use std::fs::File;
 
@@ -95,7 +96,7 @@ impl Interpreter {
                 Instruction::MoveLeft => self.pointer -= 1,
                 Instruction::MoveRight => self.pointer += 1,
                 Instruction::Putchar => print!("{}", self.memory[self.pointer] as char),
-                Instruction::Getchar => (), // NIY
+                Instruction::Getchar => self.memory[self.pointer] = io::stdin().bytes().next().unwrap().unwrap(), // NIY
                 Instruction::LoopStart => {
                     if self.memory[self.pointer] != 0 {
                         self.stack.push(index);
